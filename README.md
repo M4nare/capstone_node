@@ -20,37 +20,55 @@
 | 사용자별 LIST API   |  POST/DELETE | project.mintpass.kr:3000/list  |
 
 
-
-
 **POST**
+
 사용자 API
+
 {
-  "user": "value"
+
+	"user": "value"
+
 }
 
 카테고리 API
+
 {
-  "tag":"value"
+
+	"tag":"value"
+
 }
 
 랜덤 API
+
 {
-  "weather":"value"
+
+	"weather":"value"
+
 }
+
 // 날씨 레벨 3이상 해당하는 음식점 하나를 랜덤으로 보여줌
 
 
 평점 추가 및 수정 API
+
 {
-  "id": value,
-  "user": "value",
-  "rating": "value"
+
+	"id": value,
+
+	"user": "value",
+
+	"rating": "value"
+
 }
 
 **POST/DELETE**
 
 사용자 LISTAPI
+
 {
+
 	"id" : value,
-  "userid" : "value"
+
+	"userid" : "value"
+
 }
