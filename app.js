@@ -1,34 +1,55 @@
-var express = require("express");
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
+var indexRouter = require('./routes/index');
 var mysql = require("mysql");
-var bodyParser = require("body-parser");
-var config = require("./config"); // config.js
+
+
+
 var app = express();
-var cors = require("cors");
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors());
+app.use('/', indexRouter);
 
-
+var mysqlInfo = require('./config.js')
 var pool = mysql.createPool({
-            // config.js에 있는 정보를 바탕으로 연결
-            host: config.mysql.host,
-            port: config.mysql.port,
-            user: config.mysql.username,
-            password: config.mysql.password,
-            database: config.mysql.db,
+            host: mysqlInfo.mysql.host,
+            port: mysqlInfo.mysql.port,
+            user: mysqlInfo.mysql.username,
+            password: mysqlInfo.mysql.password,
+            database: mysqlInfo.mysql.db,
             connectionLimit:20,
-	    multipleStatements: true,
+            multipleStatements: true,
             waitForConnections:false
         });
 
-
-app.listen(config.port, function() {
-    console.log("Server listening on port %d", config.port);
+ 
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
 });
 
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-var routes = require("./routes")(app, pool);
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
 
+module.exports = app;
